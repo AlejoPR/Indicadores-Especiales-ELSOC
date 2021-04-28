@@ -10,7 +10,8 @@ Repositorio con indicadores construidos a partir del Estudio Longitudinal Social
 **04_Codificacion_EGP**: Construcción de esquema de clases sociales Erickson-Goldthorpe-Portocarrero (EGP).
 
 Los primeros tres documentos son la traducción a R de la sintaxis de SPSS de Harry Ganzeboom disponible en http://www.harryganzeboom.nl/ISCO08/index.htm
+
 La codificación de EGP se basa en
 
-Ganzeboom, H. & Treiman, D. (1996) Internationally Comparable Measures of Occupational Status for the 1988 International Standar Classification of Occupations. Social Science Research, 25, 201-239.
+Ganzeboom, H. & Treiman, D. (1996) Internationally Comparable Measures of Occupational Status for the 1988 International Standard Classification of Occupations. Social Science Research, 25, 201-239.
 
