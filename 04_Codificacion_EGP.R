@@ -13,14 +13,14 @@ elsoc<- elsoc_wide_2016_2019
 library(sjmisc)
 
 
-#Revisión de variables y renombrar variables
+#RevisiÃ³n de variables y renombrar variables
 frq(elsoc$cod_m03_w01) #CIUO
 elsoc$isko<- elsoc$cod_m03_w01
 
-frq(elsoc$m06_w01) #Supervisión
+frq(elsoc$m06_w01) #SupervisiÃ³n
 elsoc$sv<-elsoc$m06_w01
 
-frq(elsoc$m07_w01) #relación de empleo
+frq(elsoc$m07_w01) #relaciÃ³n de empleo
 #codificacion
 #1.Empleado u obrero en empresa privada = 1. Employee
 #2. Empleado u obrero del sector publico (incluso empresa publica o municipalidad)=1. Employee
@@ -33,9 +33,9 @@ elsoc$s<-car::recode(elsoc$m07_w01, "1=1;2=1;3=NA;4=2;5=2;6:7=NA;-999:-888=NA")
 
 
 
-# Fase 1: Codificación bruta en base a CIUO -------------------------------
+# Fase 1: CodificaciÃ³n bruta en base a CIUO -------------------------------
 
-#CODIGO BRUTO DE GANZEBOOM Y TREIMAN, ACÁ REQUIERE ALGUNAS MODIFICACIONES. SE SUGIERE LAS SIGUIENTES
+#CODIGO BRUTO DE GANZEBOOM Y TREIMAN, ACÃ REQUIERE ALGUNAS MODIFICACIONES. SE SUGIERE LAS SIGUIENTES
 #Profesores y Maestros (2320; 2331; 2332;2340;2351;2352;2359) = se modifican a rutina no manual (3) en vez de servicio II (2)
 #Tenedores de libros (3433)=se modifican a rutina no manual (3) en vez de servicio II (2)
 #vendedores ambulantes (9111; 9112;9113): Se modifican a trabajadores no calificados (9), en vez de trabajadores de rutina no manual
@@ -120,7 +120,7 @@ elsoc$egp<- car::recode(elsoc$isko, "1000= 1;1100= 1;1110= 1;1120= 1;1130= 2;114
                         9331= 9;9332= 9;9333= 9 ")
 
 
-# Fase 2: Codificación eb base a situación de empleo o situación d --------
+# Fase 2: CodificaciÃ³n eb base a situaciÃ³n de empleo o situaciÃ³n d --------
 
 #promocionalidad de ciertas ocupaciones
 elsoc$p<-car::recode(elsoc$isko, "1000:9299=1; else=0")
@@ -129,7 +129,7 @@ elsoc$d<-car::recode(elsoc$isko, "1300:1319=1;3400:3439=1;5000:5230=1;else=0")
 
 #Nueva variables
 elsoc$egp11<-elsoc$egp
-#SI EGP="'IIIa Routine non-manuals" Y Supervisa a más de una persona, ENTONCES EGP= "II Lower controllers"
+#SI EGP="'IIIa Routine non-manuals" Y Supervisa a mÃ¡s de una persona, ENTONCES EGP= "II Lower controllers"
 elsoc$egp11[elsoc$egp==3 & elsoc$sv>=1]<-2
 #SI EGP="'IIIa Routine non-manuals" Y es autoempleado Y tiene degradez, ENTONCES EGP="'IIIb Lower sales-service'"                  
 elsoc$egp11[elsoc$egp==3 & elsoc$s==2 & elsoc$d==1]<-4
@@ -137,7 +137,7 @@ elsoc$egp11[elsoc$egp==3 & elsoc$s==2 & elsoc$d==1]<-4
 elsoc$egp11[elsoc$egp==2 & elsoc$s==2 & elsoc$d==1]<-4
 #SI EGP>="V Manual supervisors" Y EGP<="VIIa Unskilled workers" Y es autoempleado Y tiene promocionalidad, ENTONCES EGP="'IVa Self-empl. with empl."
 elsoc$egp11[elsoc$egp>=7 & elsoc$egp<=9  & elsoc$s==2 & elsoc$p==1]<-5
-#SI EGP= VI Skilled workers' Y Supervisa a más de una persona, ENTONCES EGP= "V Manual supervisors' 
+#SI EGP= VI Skilled workers' Y Supervisa a mÃ¡s de una persona, ENTONCES EGP= "V Manual supervisors' 
 elsoc$egp11[elsoc$egp==8 & elsoc$sv>=1]<-7
 #SI EGP= 'VIIb Farm labors Y es autoempleado, ENTONCES, EGP="IVc Self-empl. farmers"                   
 elsoc$egp11[elsoc$egp==10 & elsoc$s==2]<-11
@@ -145,11 +145,11 @@ elsoc$egp11[elsoc$egp==10 & elsoc$s==2]<-11
 elsoc$egp11[elsoc$egp==4 & elsoc$sv<1]<-5 #EN ORIGINAL SALE QUE DEBE SER "MENOS DE", PERO ESTO ES CONTRATEORICO
 #SI EGP= IVa Self-empl. with empl.  Y supervisa desde una persona, ENTONCES, EGP= 'IIIb Lower sales-service'           
 elsoc$egp11[elsoc$egp==5 & elsoc$sv>=1]<-4
-#SI EGP= II Lower controllers' y supervisa a más de 10 personas, entonces EGP= I Higher controllers'                    
+#SI EGP= II Lower controllers' y supervisa a mÃ¡s de 10 personas, entonces EGP= I Higher controllers'                    
 elsoc$egp11[elsoc$egp==2 & elsoc$sv>=10]<-1
-#SI EGP= 'IIIa Routine non-manuals'' y supervisa a más de 10 personas, entonces EGP= I Higher controllers'
+#SI EGP= 'IIIa Routine non-manuals'' y supervisa a mÃ¡s de 10 personas, entonces EGP= I Higher controllers'
 elsoc$egp11[elsoc$egp==3 & elsoc$sv>=10]<-1
-#SI EGP= 'IIIb Lower sales-services' y supervisa a más de 10 personas, entonces EGP= I Higher controllers'                   
+#SI EGP= 'IIIb Lower sales-services' y supervisa a mÃ¡s de 10 personas, entonces EGP= I Higher controllers'                   
 elsoc$egp11[elsoc$egp==4 & elsoc$sv>=10]<-1
 
 table(elsoc$egp11)
@@ -169,7 +169,30 @@ table(elsoc$egp_f)
 prop.table(table(elsoc$egp_f))
 
 
-#revision para imputación
+#revision para imputaciÃ³n
 table(elsoc$egp_f,elsoc$m02_w01)
 
 
+#NOTA: ELSOC no es representativa de sectores rurales, por lo que se recomienda alguna de las siguientes agregaciones del esquema EGP
+#colapsar version de 7 clases
+elsoc$egp_7_w01<- car::recode(elsoc$egp_f_w01, "'I Higher controllers'='I Upper service class';
+                              'II Lower controllers'='II Lower service class';
+                              c('IIIa routine non-manuals')='III routine non-manuals';
+                              c('IVa Self-empl. with empl.','IVb Self-empl. no empl.', 'IVc Self-empl. farmers')= 'IVa+b+c petty bourgeoisie';
+                              'V Manual supervisors'='V Technicians and supervisors';
+                              'VI Skilled workers'='VI Skilled workers';
+                              c('VIIa Unskilled workers','VIIb Farm labors')='VII Unskilled workers'")
+
+
+table(elsoc$egp_7_w01)
+prop.table(table(elsoc$egp_7_w01))
+
+#colapsar version de 4 clases
+
+elsoc$egp_4_w01<-car::recode(elsoc$egp_7_w01, "c('I Upper service class','II Lower service class')='I+II Service Class';
+                             c('III routine non-manuals','V Technicians and supervisors')='IIIa Intermediate class';
+                             'IVa+b+c petty bourgeoisie'='IV Petty Bourgeoisie';
+                             c('VI Skilled workers','VII Unskilled workers')='VI+VII Manual Class'")
+
+table(elsoc$egp_4_w01)
+prop.table(table(elsoc$egp_4_w01))
